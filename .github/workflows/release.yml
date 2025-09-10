@@ -4,9 +4,9 @@ on:
   push:
     branches: [ main ]
     paths:
-      - 'memory/**'
-      - 'scripts/**'
-      - 'templates/**'
+      - 'docs/memory/**'
+      - '.spec-kit/scripts/**'
+      - '.spec-kit/templates/**'
   workflow_dispatch:
 
 jobs:
@@ -65,20 +65,27 @@ jobs:
         mkdir -p sdd-package-base
         
         # Copy common folders to base
-        if [ -d "memory" ]; then
-          cp -r memory sdd-package-base/
-          echo "Copied memory folder"
+        if [ -d "docs/memory" ]; then
+          mkdir -p sdd-package-base/memory
+          cp -r docs/memory/* sdd-package-base/memory/
+          echo "Copied memory folder from docs/memory"
         fi
         
-        if [ -d "scripts" ]; then
-          cp -r scripts sdd-package-base/
-          echo "Copied scripts folder"
+        if [ -d ".spec-kit/scripts" ]; then
+          mkdir -p sdd-package-base/scripts
+          cp -r .spec-kit/scripts/* sdd-package-base/scripts/
+          echo "Copied scripts folder from .spec-kit/scripts"
         fi
 
-        if [ -d "templates" ]; then
+        if [ -d ".spec-kit/templates" ]; then
           mkdir -p sdd-package-base/templates
           # Copy templates folder but exclude the commands directory
-          find templates -type f -not -path "templates/commands/*" -exec cp --parents {} sdd-package-base/ \;
+          find .spec-kit/templates -type f -not -path ".spec-kit/templates/commands/*" -exec cp --parents {} sdd-package-base/ \;
+          # Remove the .spec-kit prefix from the copied structure
+          if [ -d "sdd-package-base/.spec-kit" ]; then
+            mv sdd-package-base/.spec-kit/templates/* sdd-package-base/templates/
+            rm -rf sdd-package-base/.spec-kit
+          fi
           echo "Copied templates folder (excluding commands directory)"
         fi
         
@@ -91,7 +98,7 @@ jobs:
           
           mkdir -p "$output_dir"
           
-          for template in templates/commands/*.md; do
+          for template in .spec-kit/templates/commands/*.md; do
             if [[ -f "$template" ]]; then
               name=$(basename "$template" .md)
               description=$(awk '/^description:/ {gsub(/^description: *"?/, ""); gsub(/"$/, ""); print; exit}' "$template" | tr -d '\r')

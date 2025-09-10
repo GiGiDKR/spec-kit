@@ -68,18 +68,28 @@ jobs:
         # Copy common folders to base
         echo "Packaging SDD common components..."
         
-        if [ -d "memory" ]; then
-          cp -r memory sdd-package-base/
-          echo "✓ Copied memory folder ($(find memory -type f | wc -l) files)"
+        if [ -d "docs/memory" ]; then
+          mkdir -p sdd-package-base/memory
+          cp -r docs/memory/* sdd-package-base/memory/
+          echo "✓ Copied memory folder from docs/memory ($(find docs/memory -type f | wc -l) files)"
         else
-          echo "⚠️ memory folder not found"
+          echo "⚠️ docs/memory folder not found"
         fi
         
-        if [ -d "scripts" ]; then
-          cp -r scripts sdd-package-base/
-          echo "✓ Copied scripts folder ($(find scripts -type f | wc -l) files)"
+        if [ -d ".spec-kit/scripts" ]; then
+          mkdir -p sdd-package-base/scripts
+          cp -r .spec-kit/scripts/* sdd-package-base/scripts/
+          echo "✓ Copied scripts folder from .spec-kit/scripts ($(find .spec-kit/scripts -type f | wc -l) files)"
         else
-          echo "⚠️ scripts folder not found"
+          echo "⚠️ .spec-kit/scripts folder not found"
+        fi
+        
+        if [ -d ".spec-kit/templates" ]; then
+          mkdir -p sdd-package-base/templates
+          cp -r .spec-kit/templates/* sdd-package-base/templates/
+          echo "✓ Copied templates folder from .spec-kit/templates ($(find .spec-kit/templates -type f | wc -l) files)"
+        else
+          echo "⚠️ .spec-kit/templates folder not found"
         fi
         
         # Create Claude Code package
