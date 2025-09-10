@@ -385,12 +385,40 @@ def init_git_repo(project_path: Path, quiet: bool = False) -> bool:
         os.chdir(original_cwd)
 
 
+def get_git_repo_info():
+    """Get the GitHub repository owner and name from the remote URL."""
+    try:
+        cmd = ["git", "config", "--get", "remote.origin.url"]
+        result = subprocess.run(cmd, check=True, capture_output=True, text=True)
+        url = result.stdout.strip()
+        
+        if url.startswith("https://"):
+            # HTTPS URL: https://github.com/owner/repo.git
+            parts = url.split("/")
+            owner = parts[-2]
+            repo = parts[-1].replace(".git", "")
+        elif url.startswith("git@"):
+            # SSH URL: git@github.com:owner/repo.git
+            parts = url.split(":")
+            owner_repo = parts[-1]
+            owner, repo = owner_repo.split("/")
+            repo = repo.replace(".git", "")
+        else:
+            return None, None
+        
+        return owner, repo
+    except (subprocess.CalledProcessError, FileNotFoundError, IndexError):
+        return None, None
+
+
 def download_template_from_github(ai_assistant: str, download_dir: Path, *, verbose: bool = True, show_progress: bool = True):
     """Download the latest template release from GitHub using HTTP requests.
     Returns (zip_path, metadata_dict)
     """
-    repo_owner = "github"
-    repo_name = "spec-kit"
+    repo_owner, repo_name = get_git_repo_info()
+    if not repo_owner or not repo_name:
+        repo_owner = "GiGiDKR"
+        repo_name = "spec-kit"
     
     if verbose:
         console.print("[cyan]Fetching latest release information...[/cyan]")

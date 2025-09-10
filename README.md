@@ -16,7 +16,8 @@
 
 - [🤔 What is Spec-Driven Development?](#-what-is-spec-driven-development)
 - [⚡ Get started](#-get-started)
-- [📚 Core philosophy](#-core-philosophy)
+- [� Project Structure](#-project-structure)
+- [�📚 Core philosophy](#-core-philosophy)
 - [🌟 Development phases](#-development-phases)
 - [🎯 Experimental goals](#-experimental-goals)
 - [🔧 Prerequisites](#-prerequisites)
@@ -64,7 +65,35 @@ Use `/tasks` to create an actionable task list, then ask your agent to implement
 
 For detailed step-by-step instructions, see our [comprehensive guide](./spec-driven.md).
 
-## 📚 Core philosophy
+## � Project Structure
+
+Spec-Kit organizes files to maintain clear separation between development tooling and your project code:
+
+```
+your-project/
+├── .spec-kit/             # Spec-Kit tooling (hidden directory)
+│   ├── config.sh          # Centralized path configuration
+│   ├── scripts/           # Automation scripts
+│   └── templates/         # Templates for spec generation
+├── docs/                  # Project documentation
+│   ├── memory/            # Constitution and principles
+│   │   ├── constitution.md
+│   │   └── constitution_update_checklist.md
+│   └── ...                # Other documentation
+├── specs/                 # Generated specifications (by branch)
+├── src/                   # Your application code
+└── ...                    # Other project files
+```
+
+**Key principles:**
+- **`.spec-kit/`** contains all Spec-Kit tooling and stays out of your way
+- **`docs/memory/`** houses the project constitution and core principles
+- **`specs/`** organizes specifications by feature branch
+- **Clean root directory** separates tooling from your actual project
+
+> **Note for existing users:** If you're upgrading from an older version, the scripts and templates have been moved to `.spec-kit/` and memory files to `docs/memory/`. The workflows remain the same, but paths are now centralized for better organization.
+
+## �📚 Core philosophy
 
 Spec-Driven Development is a structured process that emphasizes:
 
@@ -324,7 +353,7 @@ This helps refine the implementation plan and helps you avoid potential blind sp
 You can also ask Claude Code (if you have the [GitHub CLI](https://docs.github.com/en/github-cli/github-cli) installed) to go ahead and create a pull request from your current branch to `main` with a detailed description, to make sure that the effort is properly tracked.
 
 >[!NOTE]
->Before you have the agent implement it, it's also worth prompting Claude Code to cross-check the details to see if there are any over-engineered pieces (remember - it can be over-eager). If over-engineered components or decisions exist, you can ask Claude Code to resolve them. Ensure that Claude Code follows the [constitution](base/memory/constitution.md) as the foundational piece that it must adhere to when establishing the plan.
+>Before you have the agent implement it, it's also worth prompting Claude Code to cross-check the details to see if there are any over-engineered pieces (remember - it can be over-eager). If over-engineered components or decisions exist, you can ask Claude Code to resolve them. Ensure that Claude Code follows the [constitution](docs/memory/constitution.md) as the foundational piece that it must adhere to when establishing the plan.
 
 ### STEP 5: Implementation
 

@@ -4,6 +4,12 @@
   href: installation.md
 - name: Quick Start
   href: quickstart.md
+- name: Memory
+  items:
+  - name: Constitution
+    href: memory/constitution.md
+  - name: Constitution Update Checklist
+    href: memory/constitution_update_checklist.md
 - name: Contributing
   href: CONTRIBUTING.md
 - name: Support
